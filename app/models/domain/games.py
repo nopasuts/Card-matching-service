@@ -9,4 +9,6 @@ class Game(IDModelMixin, DateTimeModelMixin, RWModel):
     board_id: str
     click_count: int
     is_finish: bool
+    columns: int
+    rows: int
     cards: List[Card] = []

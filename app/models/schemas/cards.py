@@ -6,9 +6,10 @@ class CardBase(BaseModel):
     is_open: bool
     value: int
 
-
-class CardCreate(CardBase):
-    pass
+class CardMatch(BaseModel):
+    first_position: str
+    second_position: str
+    board_id: str
 
 
 class Card(CardBase):

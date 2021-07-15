@@ -11,9 +11,12 @@ from app.services.cards import get_card_rows
 
 class GamesRepository(BaseRepository):
     async def get_current_game_by_board_id(self, *, board_id: str) -> Game:
-        game_row = await queries.get_game_info_by_board_id(self.connection, board_id=board_id)
-        if game_row:
-            return Game(**game_row)
+        game_row_raw = await queries.get_game_info_by_board_id(self.connection, board_id=board_id)
+        if game_row_raw:
+            game_row = dict(game_row_raw)
+            cards_list = await queries.get_cards_by_game_id(self.connection, game_id=game_row["id"])
+            game_row["cards"] = cards_list
+            return game_row
 
         raise EntityDoesNotExist("game with board id {0} does not exist".format(board_id))
 
@@ -22,13 +25,6 @@ class GamesRepository(BaseRepository):
     ) -> Game:
         boardInfo = get_board_size()
         board_id = generate_board_id()
-        card_rows = get_card_rows(
-            board_id=board_id,
-            column=boardInfo["column"],
-            row=boardInfo["row"],
-            shuffleArrayNumber=boardInfo["shuffleArrayNumber"]
-        )
-        print(card_rows)
         game = Game(board_id=board_id, click_count=0, is_finish=False)
 
         async with self.connection.transaction():
@@ -37,25 +33,37 @@ class GamesRepository(BaseRepository):
                 board_id=game.board_id,
                 click_count=game.click_count,
                 is_finish=game.is_finish,
+                columns=boardInfo["column"],
+                rows=boardInfo["row"],
             )
+            cards_info = get_card_rows(
+                game_id=game_row["id"],
+                column=boardInfo["column"],
+                row=boardInfo["row"],
+                shuffleArrayNumber=boardInfo["shuffleArrayNumber"]
+            )
+            await queries.create_new_cards(
+                self.connection,
+                cards_info
+            )
+            game_detail = await self.get_current_game_by_board_id(board_id=board_id)
 
-        return game.copy(update=dict(game_row))
+        return dict(game_detail)
 
-    async def update_game(
+    async def update_click(
         self,
-        *,
-        game: Game,
-        click_count: Optional[int] = None,
+        board_id: str
     ) -> Game:
-        game_in_db = await self.get_current_game_by_board_id(board_id=game.board_id)
+        game_row_raw = await self.get_current_game_by_board_id(board_id=board_id)
+        game_row = dict(game_row_raw)
 
-        game_in_db.click_count = click_count or game_in_db.click_count
+        click_count = game_row["click_count"] + 1
 
         async with self.connection.transaction():
-            game_in_db.updated_at = await queries.update_game_by_board_id(
+            await queries.click_count(
                 self.connection,
-                board_id=game.board_id,
-                click_count=game.click_count,
+                board_id=board_id,
+                click_count=click_count,
             )
 
-        return game_in_db
+        return "UPDATED"

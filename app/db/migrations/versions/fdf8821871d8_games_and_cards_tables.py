@@ -56,6 +56,8 @@ def create_games_table() -> None:
         sa.Column("board_id", sa.Text, unique=True, nullable=False, index=True),
         sa.Column("click_count", sa.Integer, nullable=False),
         sa.Column("is_finish", sa.Boolean, nullable=False),
+        sa.Column("columns", sa.Integer, nullable=False),
+        sa.Column("rows", sa.Integer, nullable=False),
         *timestamps(),
     )
     op.execute(

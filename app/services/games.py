@@ -24,5 +24,5 @@ def get_board_size():
 
 def generate_board_id():
   now = datetime.now()
-  dt_string = now.strftime("BOARD-%d/%m/%YT%H:%M:%S")
+  dt_string = now.strftime("BOARD-%d%m%YT%H%M%S")
   return dt_string

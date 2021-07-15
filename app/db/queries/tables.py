@@ -33,6 +33,8 @@ class Games(TypedTable):
     game_id: str
     click_count: int
     is_finish: bool
+    columns: int
+    rows: int
     created_at: datetime
     updated_at: datetime
 
