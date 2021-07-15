@@ -32,8 +32,8 @@ class CardRepository(BaseRepository):
           second_card_row = await queries.get_card_by_position(self.connection, position=second_position, game_id=game_id)
           if (is_cards_match(dict(first_card_row), dict(second_card_row))):
             async with self.connection.transaction():
-              await queries.update_is_open_card(position=first_position, game_id=game_id, is_open=True)
-              await queries.update_is_open_card(position=second_position, game_id=game_id, is_open=True)
+              await queries.update_is_open_card(self.connection, position=first_position, game_id=game_id, is_open=True)
+              await queries.update_is_open_card(self.connection, position=second_position, game_id=game_id, is_open=True)
               return "SUCCESS"
 
         return "UNSUCCESS"

@@ -25,7 +25,7 @@ class GamesRepository(BaseRepository):
     ) -> Game:
         boardInfo = get_board_size()
         board_id = generate_board_id()
-        game = Game(board_id=board_id, click_count=0, is_finish=False)
+        game = Game(board_id=board_id, click_count=0, is_finish=False, columns=boardInfo["column"], rows=boardInfo["row"])
 
         async with self.connection.transaction():
             game_row = await queries.create_new_game(
@@ -60,10 +60,10 @@ class GamesRepository(BaseRepository):
         click_count = game_row["click_count"] + 1
 
         async with self.connection.transaction():
-            await queries.click_count(
+            game_row = await queries.update_game_click_count(
                 self.connection,
                 board_id=board_id,
                 click_count=click_count,
             )
 
-        return "UPDATED"
+        return dict(game_row)

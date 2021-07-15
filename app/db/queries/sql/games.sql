@@ -19,4 +19,6 @@ RETURNING
 UPDATE games
 SET click_count = :click_count
 WHERE board_id = :board_id
+RETURNING
+    id, created_at, updated_at;
 
