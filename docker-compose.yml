@@ -1,0 +1,33 @@
+version: '3'
+
+services:
+  app:
+    build: .
+    restart: on-failure
+    ports:
+      - "8000:8000"
+    environment:
+      DB_CONNECTION: "postgresql://api:api@db:5432/card-match-service"
+      PROJECT_NAME: 'Card-matching-project'
+      SECRET_KEY: 'MY-SECRET'
+    volumes:
+      - ./app:/app/app
+    depends_on:
+      - db
+    networks:
+      - card-match-service
+  db:
+    image: postgres:11.5-alpine
+    ports:
+      - "5008:5432"
+    environment:
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: 'api'
+      POSTGRES_PASSWORD: 'api'
+      POSTGRES_DB: 'card-match-service'
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data:cached
+    networks:
+      - card-match-service
+networks:
+  card-match-service:
