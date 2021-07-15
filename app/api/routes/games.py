@@ -10,12 +10,19 @@ from app.models.schemas.games import GameInResponse
 router = APIRouter()
 
 
-@router.get("/{game_id}", response_model=GameInResponse, name="games:get-current-game")
+@router.get("/{board_id}", response_model=GameInResponse, name="games:get-current-game")
 async def retreive_current_game(
-    game_id: str,
+    board_id: str,
     game_repo: GamesRepository = Depends(get_repository(GamesRepository)),
 ) -> GameInResponse:
-    game_row = await game_repo.get_current_game_by_game_id(game_id=game_id)
+    game_row = await game_repo.get_current_game_by_board_id(board_id=board_id)
     return GameInResponse(
         game=game_row
     )
+
+@router.post("/", name="games:create-new-game")
+async def retreive_current_game(
+    game_repo: GamesRepository = Depends(get_repository(GamesRepository)),
+) -> GameInResponse:
+    game_row = await game_repo.create_game()
+    return game_row

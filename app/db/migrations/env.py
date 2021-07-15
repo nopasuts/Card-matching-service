@@ -4,10 +4,13 @@ from logging.config import fileConfig
 
 from alembic import context
 from sqlalchemy import engine_from_config, pool
+from starlette.config import Config
 
 sys.path.append(str(pathlib.Path(__file__).resolve().parents[3]))
 
-DATABASE_URL = "postgresql://api:api@0.0.0.0:5008/card-match-service"
+envConfig = Config(".env")
+
+DATABASE_URL: str = envConfig("DB_CONNECTION", cast=str)
 
 config = context.config
 

@@ -6,7 +6,7 @@ from app.models.schemas.cards import Card
 
 
 class GameBase(BaseModel):
-    game_id: str
+    board_id: str
     click_count: int
     is_finish: bool
 

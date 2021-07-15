@@ -111,15 +111,15 @@ class ArticlesQueriesMixin:
     ) -> Record: ...
 
 class GamesQueriesMixin:
-    async def get_game_info_by_game_id(self, conn: Connection, *, game_id: str) -> Record: ...
+    async def get_game_info_by_board_id(self, conn: Connection, *, board_id: str) -> Record: ...
     async def create_new_game(
-        self, conn: Connection, game_id: str, click_count: int
+        self, conn: Connection, board_id: str, click_count: int, is_finish
     ) -> Record: ...
-    async def update_game_by_game_id(
+    async def update_game_by_board_id(
         self,
         conn: Connection,
         *,
-        game_id: str,
+        board_id: str,
         click_count: int,
     ) -> Record: ...
 

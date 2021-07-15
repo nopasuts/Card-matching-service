@@ -31,6 +31,8 @@ ALLOWED_HOSTS: List[str] = config(
     default="",
 )
 
+GAME_BOARD_SIZE: int = config("GAME_BOARD_SIZE", cast=int, default=4)
+
 # logging configuration
 
 LOGGING_LEVEL = logging.DEBUG if DEBUG else logging.INFO

@@ -53,7 +53,7 @@ def create_games_table() -> None:
     op.create_table(
         "games",
         sa.Column("id", sa.Integer, primary_key=True),
-        sa.Column("game_id", sa.Text, unique=True, nullable=False, index=True),
+        sa.Column("board_id", sa.Text, unique=True, nullable=False, index=True),
         sa.Column("click_count", sa.Integer, nullable=False),
         sa.Column("is_finish", sa.Boolean, nullable=False),
         *timestamps(),
@@ -77,7 +77,7 @@ def create_cards_table() -> None:
         sa.Column("is_open", sa.Boolean, nullable=False),
         sa.Column("value", sa.Integer, nullable=False),
         sa.Column(
-            "game_id", sa.Text, sa.ForeignKey("games.game_id", ondelete="SET NULL")
+            "game_id", sa.Integer, sa.ForeignKey("games.id", ondelete="SET NULL")
         ),
         *timestamps(),
     )
@@ -94,8 +94,8 @@ def create_cards_table() -> None:
 
 def upgrade() -> None:
     create_updated_at_trigger()
-    create_cards_table()
     create_games_table()
+    create_cards_table()
 
 
 def downgrade() -> None:
