@@ -10,7 +10,7 @@ from app.models.schemas.stats import StatInResponse, StatUpdate
 router = APIRouter()
 
 
-@router.get("/{user_id}", name="stats:get-user")
+@router.get("/{user_id}", name="stats:Get-Or-Create-User")
 async def retreive_user_info(
     user_id: str,
     stat_repo: StatRepository = Depends(get_repository(StatRepository)),
@@ -18,7 +18,7 @@ async def retreive_user_info(
     user_row = await stat_repo.get_or_create_user(user_id=user_id)
     return user_row
 
-@router.put("/", name="stats:update-user-best-count")
+@router.put("/", name="stats:Update-User-Best-Click-Count")
 async def update_user_best_count(
     body: StatUpdate,
     stat_repo: StatRepository = Depends(get_repository(StatRepository)),
@@ -26,7 +26,7 @@ async def update_user_best_count(
     result = await stat_repo.update_user_best(user_id=body.user_id, best_click_count=body.best_click_count)
     return result
 
-@router.put("/global", name="stats:update-global-best-count")
+@router.put("/global", name="stats:Update-Global-Best-Click-Count")
 async def update_global_best_count(
     body: StatUpdate,
     stat_repo: StatRepository = Depends(get_repository(StatRepository)),
