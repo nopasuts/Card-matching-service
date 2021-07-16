@@ -6,12 +6,12 @@ from app.core import config
 from app.db.repositories.games import GamesRepository
 from app.db.repositories.stats import StatRepository
 from app.models.domain.games import Game
-from app.models.schemas.games import GameInResponse, GameUpdate, GameFinish
+from app.models.schemas.games import GameInResponse, GameUpdateClickRequest, GameUpdateClickResponse, GameFinishRequest, GameFinishResponse
 
 router = APIRouter()
 
 
-@router.get("/{board_id}", name="games:get-current-game")
+@router.get("/{board_id}",response_model=GameInResponse, name="games:get-current-game")
 async def retreive_current_game(
     board_id: str,
     game_repo: GamesRepository = Depends(get_repository(GamesRepository)),
@@ -19,24 +19,24 @@ async def retreive_current_game(
     game_row = await game_repo.get_current_game_by_board_id(board_id=board_id)
     return game_row
 
-@router.post("/", name="games:create-new-game")
+@router.post("/",response_model=GameInResponse, name="games:create-new-game")
 async def create_new_game(
     game_repo: GamesRepository = Depends(get_repository(GamesRepository)),
 ) -> GameInResponse:
     game_row = await game_repo.create_game()
     return game_row
 
-@router.put("/click", name="games:update-click-count")
+@router.put("/click",response_model=GameUpdateClickResponse, name="games:update-click-count")
 async def update_game_click_count(
-    body: GameUpdate,
+    body: GameUpdateClickRequest,
     game_repo: GamesRepository = Depends(get_repository(GamesRepository)),
 ) -> GameInResponse:
     result = await game_repo.update_click(board_id=body.board_id)
     return result
 
-@router.post("/finish", name="games:finish-the-game")
+@router.post("/finish", response_model=GameFinishResponse, name="games:finish-the-game")
 async def finish_the_game(
-    body: GameFinish,
+    body: GameFinishRequest,
     game_repo: GamesRepository = Depends(get_repository(GamesRepository)),
     stat_repo: StatRepository = Depends(get_repository(StatRepository)),
 ) -> GameInResponse:
