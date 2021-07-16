@@ -93,14 +93,37 @@ def create_cards_table() -> None:
         """
     )
 
+def create_stats_table() -> None:
+    op.create_table(
+        "stats",
+        sa.Column("id", sa.Integer, primary_key=True),
+        sa.Column("user_id", sa.Text, unique=True, nullable=False, index=True),
+        sa.Column("best_click_count", sa.Integer, nullable=True),
+        *timestamps(),
+    )
+    op.execute(
+        """
+        CREATE TRIGGER update_stat_modtime
+            BEFORE UPDATE
+            ON games
+            FOR EACH ROW
+        EXECUTE PROCEDURE update_updated_at_column();
+
+        INSERT INTO stats (user_id, best_click_count)
+        VALUES ('GLOBAL_STAT', NULL)
+        """
+    )
+
 
 def upgrade() -> None:
     create_updated_at_trigger()
     create_games_table()
     create_cards_table()
+    create_stats_table()
 
 
 def downgrade() -> None:
     op.drop_table("games")
     op.drop_table("cards")
+    op.drop_table("stats")
     op.execute("DROP FUNCTION update_updated_at_column")

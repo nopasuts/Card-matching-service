@@ -17,7 +17,7 @@ LIMIT 1;
 INSERT INTO cards (position, is_open, game_id, value)
 VALUES (:position, :is_open, :game_id, :value)
 
--- name: update_is_open_card
+-- name: update_is_open_card!
 UPDATE cards
 SET is_open = :is_open
 WHERE game_id = :game_id AND position = :position

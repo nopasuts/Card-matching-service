@@ -15,6 +15,12 @@ class GamesQueriesMixin:
         board_id: str,
         click_count: int,
     ) -> Record: ...
+    async def finish_game(
+        self,
+        conn: Connection,
+        board_id: str,
+        is_finish: bool,
+    ) -> Record: ...
 
 class CardsQueriesMixin:
     async def get_cards_by_game_id(self, conn: Connection, *, game_id: int) -> Record: ...
@@ -24,10 +30,19 @@ class CardsQueriesMixin:
     ) -> None: ...
     async def update_is_open_card(self, conn: Connection, *, position: str, game_id: int, is_open: bool) -> Record: ...
 
+class StatsQueriesMixin:
+    async def get_user_by_user_id(self, conn: Connection, *, user_id: str) -> Record: ...
+    async def create_new_user(self, conn: Connection, *, user_id: str, best_click_count: int) -> Record: ...
+    async def update_user_best_click_count(
+        self, conn: Connection, user_id: str, best_click_count: int
+    ) -> Record: ...
+    async def update_global_best_click_count(self, conn: Connection, best_click_count: int) -> Record: ...
+
 
 class Queries(
     GamesQueriesMixin,
-    CardsQueriesMixin
+    CardsQueriesMixin,
+    StatsQueriesMixin
 ): ...
 
 queries: Queries

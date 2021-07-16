@@ -18,6 +18,10 @@ class GameCreate(GameBase):
 class GameUpdate(BaseModel):
     board_id: str
 
+class GameFinish(BaseModel):
+    board_id: str
+    user_id: str
+
 class GameInResponse(GameBase):
     id: int
     cards: List[Card] = []

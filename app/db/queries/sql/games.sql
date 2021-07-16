@@ -15,9 +15,17 @@ VALUES (:board_id, :click_count, :is_finish, :columns, :rows)
 RETURNING
     id, created_at, updated_at;
 
--- name: update_game_click_count
+-- name: update_game_click_count<!
 UPDATE games
 SET click_count = :click_count
+WHERE board_id = :board_id
+RETURNING
+    id, created_at, updated_at;
+
+
+-- name: finish_game<!
+UPDATE games
+SET is_finish = :is_finish
 WHERE board_id = :board_id
 RETURNING
     id, created_at, updated_at;
