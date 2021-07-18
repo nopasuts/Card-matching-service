@@ -10,7 +10,7 @@ Card matching service using python FastAPI
 - Save user best click counts
 
 ## Getting start
-- Git clone `https://github.com/nopasuts/Card-matching-service/tree/master`
+- Git clone `https://github.com/nopasuts/Card-matching-service.git`
 
 Development
 ---------
