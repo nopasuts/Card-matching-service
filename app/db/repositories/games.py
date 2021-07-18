@@ -77,13 +77,17 @@ class GamesRepository(BaseRepository):
         board_id: str,
     ) -> Game:
         game_row_raw = await self.get_current_game_by_board_id(board_id=board_id)
-        game_row = dict(game_row_raw)
 
-        async with self.connection.transaction():
-            await queries.finish_game(
-                self.connection,
-                board_id=board_id,
-                is_finish=True,
-            )
+        if game_row_raw:
+            game_row = dict(game_row_raw)
 
-        return dict(game_row)
+            async with self.connection.transaction():
+                await queries.finish_game(
+                    self.connection,
+                    board_id=board_id,
+                    is_finish=True,
+                )
+
+            return dict(game_row)
+
+        raise EntityDoesNotExist("game with board id {0} does not exist".format(board_id))
